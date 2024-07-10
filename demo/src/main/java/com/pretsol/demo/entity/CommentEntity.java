@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+import java.time.ZonedDateTime;
+
 @Entity
 @Data
 @Table(name = "Comment")
@@ -21,5 +23,5 @@ public class CommentEntity {
     @Column(name = "Text")
     private String text;
     @Column(name = "DateOfComment")
-    private String dateOfComment;
+    private ZonedDateTime dateOfComment;
 }

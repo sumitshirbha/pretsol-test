@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<CommentEntity, Long>, JpaSpecificationExecutor<CommentEntity> {
 
     Optional<CommentEntity> findById(Long id);
+
+    Optional<CommentEntity> findByBy(String userName);
 }
