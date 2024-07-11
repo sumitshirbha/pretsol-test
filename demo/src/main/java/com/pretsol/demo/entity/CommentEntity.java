@@ -23,9 +23,9 @@ public class CommentEntity {
     private long id;
     @Column(name = "By", nullable = false)
     private String by;
-    @Column(name = "Text", nullable = false)
+    @Column(name = "Text", columnDefinition = "TEXT", nullable = false)
     private String text;
-    @Column(name = "DateOfComment")
+    @Column(name = "DateOfComment") //DATETIME does not exist in postgres sql therefore using timestampz
     private ZonedDateTime dateOfComment;
 
     public CommentEntity(CommentForm commentForm) {
