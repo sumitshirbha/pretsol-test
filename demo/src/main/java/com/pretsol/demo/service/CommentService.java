@@ -1,11 +1,15 @@
 package com.pretsol.demo.service;
 
+import com.pretsol.demo.controller.dto.CommentDto;
 import com.pretsol.demo.entity.CommentEntity;
 import com.pretsol.demo.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,14 +19,15 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public CommentEntity getComment(Long userId) {
-        Optional<CommentEntity> comment = commentRepository.findById(userId);
+    public CommentEntity getComment(Long commentId) {
+        Optional<CommentEntity> comment = commentRepository.findById(commentId);
         return comment.orElse(null);
     }
 
-    public CommentEntity addComment(CommentEntity comment) {
-        comment.setDateOfComment(ZonedDateTime.now());
-        return commentRepository.save(comment);
+    public CommentEntity addComment(CommentDto comment) {
+        CommentEntity entity = new CommentEntity(comment);
+        entity.setDateOfComment(ZonedDateTime.now(ZoneId.systemDefault()));
+        return commentRepository.save(entity);
     }
 
     public CommentEntity getCommentByUserName(String userName) {
@@ -31,11 +36,31 @@ public class CommentService {
     }
 
     public List<CommentEntity> getAllComments() {
-
-        List<CommentEntity> comments = commentRepository.findAll();
-        return comments;
+        return commentRepository.findAll();
     }
 
-//    public List<CommentEntity> getAllCommentsByDate() {
-//    }
+    public List<CommentEntity> getAllCommentsByDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate parsedDate = LocalDate.parse(date, formatter);
+        ZonedDateTime from = parsedDate.atStartOfDay(ZoneId.systemDefault());
+        ZonedDateTime to = parsedDate.plusDays(1).atStartOfDay(ZoneId.systemDefault());
+        return commentRepository.findAllWithCreationDateTimeBefore(from, to);
+    }
+
+    public CommentEntity updateComment(CommentDto commentDto) {
+        Optional<CommentEntity> comment = commentRepository.findById(commentDto.getId());
+
+        if (comment.isPresent()) {
+            CommentEntity commentEntity = comment.get();
+            Optional.ofNullable(commentDto.getBy()).ifPresent(commentEntity::setBy);// functionally should not be updated
+            Optional.ofNullable(commentDto.getText()).ifPresent(commentEntity::setText);
+            return commentRepository.saveAndFlush(commentEntity);
+        } else {
+            return null;
+        }
+    }
+
+    public void deleteComment(Long id) {
+        commentRepository.deleteById(id);
+    }
 }
