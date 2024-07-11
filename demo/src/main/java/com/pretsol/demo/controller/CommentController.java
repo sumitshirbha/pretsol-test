@@ -1,6 +1,6 @@
 package com.pretsol.demo.controller;
 
-import com.pretsol.demo.controller.dto.CommentDto;
+import com.pretsol.demo.controller.form.CommentForm;
 import com.pretsol.demo.entity.CommentEntity;
 import com.pretsol.demo.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +68,7 @@ public class CommentController {
     }
 
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CommentEntity> saveComment(@RequestBody(required = true) CommentDto comment) {
+    public ResponseEntity<CommentEntity> saveComment(@RequestBody(required = true) CommentForm comment) {
         if (comment.getBy() == null || comment.getText() == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
@@ -81,7 +81,7 @@ public class CommentController {
     }
 
     @PutMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CommentEntity> updateComment(@RequestBody(required = true) CommentDto comment) {
+    public ResponseEntity<CommentEntity> updateComment(@RequestBody(required = true) CommentForm comment) {
         CommentEntity result = commentService.updateComment(comment);
         if (result != null) {
             return new ResponseEntity<>(result, HttpStatus.OK);

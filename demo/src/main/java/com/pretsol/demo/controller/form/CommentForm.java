@@ -1,10 +1,10 @@
-package com.pretsol.demo.controller.dto;
+package com.pretsol.demo.controller.form;
 
 import lombok.Data;
 
 
 @Data
-public class CommentDto {
+public class CommentForm {
     private Long id;
     private String by;
     private String text;

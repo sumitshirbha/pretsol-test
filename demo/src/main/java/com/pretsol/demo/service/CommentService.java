@@ -1,6 +1,6 @@
 package com.pretsol.demo.service;
 
-import com.pretsol.demo.controller.dto.CommentDto;
+import com.pretsol.demo.controller.form.CommentForm;
 import com.pretsol.demo.entity.CommentEntity;
 import com.pretsol.demo.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class CommentService {
         return comment.orElse(null);
     }
 
-    public CommentEntity addComment(CommentDto comment) {
+    public CommentEntity addComment(CommentForm comment) {
         CommentEntity entity = new CommentEntity(comment);
         entity.setDateOfComment(ZonedDateTime.now(ZoneId.systemDefault()));
         return commentRepository.save(entity);
@@ -47,13 +47,13 @@ public class CommentService {
         return commentRepository.findAllWithCreationDateTimeBefore(from, to);
     }
 
-    public CommentEntity updateComment(CommentDto commentDto) {
-        Optional<CommentEntity> comment = commentRepository.findById(commentDto.getId());
+    public CommentEntity updateComment(CommentForm commentForm) {
+        Optional<CommentEntity> comment = commentRepository.findById(commentForm.getId());
 
         if (comment.isPresent()) {
             CommentEntity commentEntity = comment.get();
-            Optional.ofNullable(commentDto.getBy()).ifPresent(commentEntity::setBy);// functionally should not be updated
-            Optional.ofNullable(commentDto.getText()).ifPresent(commentEntity::setText);
+            Optional.ofNullable(commentForm.getBy()).ifPresent(commentEntity::setBy);// functionally should not be updated
+            Optional.ofNullable(commentForm.getText()).ifPresent(commentEntity::setText);
             return commentRepository.saveAndFlush(commentEntity);
         } else {
             return null;

@@ -1,7 +1,6 @@
 package com.pretsol.demo.entity;
 
-import com.pretsol.demo.controller.dto.CommentDto;
-import jakarta.annotation.Nonnull;
+import com.pretsol.demo.controller.form.CommentForm;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,8 +28,8 @@ public class CommentEntity {
     @Column(name = "DateOfComment")
     private ZonedDateTime dateOfComment;
 
-    public CommentEntity(CommentDto commentDto) {
-        this.by = commentDto.getBy();
-        this.text = commentDto.getText();
+    public CommentEntity(CommentForm commentForm) {
+        this.by = commentForm.getBy();
+        this.text = commentForm.getText();
     }
 }
